@@ -1,0 +1,55 @@
+*{
+    padding: 0%;
+    margin: 0%;
+
+
+}
+
+header{
+    text-align: center;
+    font-size: xx-large;
+    font-weight: 600;
+    color: aliceblue;
+    background-color: navy;
+    
+}
+div{
+    position: relative;/*positions the children relative
+                        to the div rather than the page*/
+
+clip:rect()                }
+
+canvas{
+    position:absolute;/*basically alloes the canvases to be positioned relative to the div*/
+    height: auto;
+    width: 60%;
+    align-self: center;
+    margin-right:20%;
+    margin-left: 20%;
+    margin-top: 5dvi;
+    border: 1px solid black ;
+    
+}
+
+#clouds{
+    position:absolute;
+    margin-left: 20%;
+    margin-top: 9dvi;
+    width:10%;
+    background: transparent;
+    clip: inherit;
+}
+#car{
+    position: absolute;
+    width:10%;
+    margin-left:30%;
+    margin-top: 26%;
+}
+#obstacle1{
+    position: absolute;
+    width:8%;
+    margin-top: 18%;
+    margin-left: 32%;
+    display:none;
+    border:3px solid red;
+}
