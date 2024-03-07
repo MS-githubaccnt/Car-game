@@ -2,12 +2,14 @@ const canv=document.getElementById("gameCanvas");
 const canv2=document.getElementById("canv2")
 const cntxt=canv.getContext("2d");
 const cntxt2=canv2.getContext("2d");
+
 let obstacle1=document.getElementById("obstacle1")
 let car=document.getElementById("car")
 //var width=getProperty(canv,"width");
 //var length=getProperty(canv,"height");
 let aVari=0.0;
-let gameRunning=true
+let speedOfEverything=2;
+
 //BUILDINGS BELOW
 
 cntxt.fillStyle="rgb(135 206 235)";
@@ -148,8 +150,8 @@ if (arr.length==(the_no-1)*3){
 //even if change the order still right one working better ??
 //animateLanes(-1.5,canv2.width/2.5,canv2.height/2,canv2.height/1.5,canv2.width/24,"white",1,1);
 //NOT SURE WHY BUT THE ORDER MATTERS HERE, PUTTING CONDTION ON CLEAR RECT AND ORDERING THE FUNCTION CALLS SOLVED THE FLICKER ISSUE
-setTimeout(animateLanes(1.75,canv2.width*11/20-canv2.width/24,canv2.height/2,canv2.height/1.5,canv2.width/24,"white",1,1),0)
-setTimeout(animateLanes(-1.75,canv2.width*9/20,canv2.height/2,canv2.height/1.5,canv2.width/24,"white",1,2),0)
+setTimeout(animateLanes(1.75,canv2.width*11/20-canv2.width/24,canv2.height/2,canv2.height/1.5,canv2.width/24,"white",speedOfEverything/2,1),0)
+setTimeout(animateLanes(-1.75,canv2.width*9/20,canv2.height/2,canv2.height/1.5,canv2.width/24,"white",speedOfEverything/2,2),0)
 let startOfGamePlay=Date.now();
 
 function recursiveForCloud(startOfCloud){
@@ -195,12 +197,14 @@ let timeBeforeNextObstacle=Math.floor(Math.random()*11)
 //this will be repeated every 4 seconds and give a time interval b/w 0 to 4 secnds so an obstacle should appear from 4 to 8 seconds apart
 //have to ensure puddle goes away in less than four seconds
 
-let puddleSpeed=2.5
+let puddleSpeed=speedOfEverything*1.25
 //let ogObstaclebottom=0
 let slopeOfmotion=1
 let xOfObstacle=0;
 let obstacleOnScreen=false;
+let checkedAlready=false;
 let noOfframe=0;
+let score=0
 let timeOfspawn=0;
 let PositiveOrNegative=(Math.floor(Math.random()*2)==1)?1:-1
 let ramdomnessOfMotion=Math.random()*1.25*PositiveOrNegative
@@ -213,6 +217,7 @@ setInterval(function(){
     function sendObstacle(){
         if(obstacleOnScreen==false){
         let puddleLocation=Math.random()*canv2.width*2/3+10
+        checkedAlready=false;
         obstacle1.style.left=puddleLocation+"px"
         //ogObstaclebottom=obstacle1.getBoundingClientRect().y;
         timeOfspawn=Date.now()
@@ -228,7 +233,7 @@ setInterval(function(){
         
 
             let bottom = obstacle1.getBoundingClientRect().bottom;
-            obstacle1.style.top=puddleSpeed*slopeOfmotion*(Date.now()-timeOfspawn)/100+"px";
+            obstacle1.style.top=1.25*speedOfEverything*slopeOfmotion*(Date.now()-timeOfspawn)/100+"px";
             checkCollision();
             //2* since should move to roughly teixe its og heigt
             console.log(obstacle1.getBoundingClientRect())
@@ -242,6 +247,11 @@ setInterval(function(){
                 clearInterval(timer2);
                 obstacle1.style.display="none"
                 obstacleOnScreen=false;
+                speedOfEverything+=0.5
+                if(checkedAlready==false){
+                score+=1}
+                document.getElementById("score").textContent="Score: "+score; 
+                
             }
 
     },10)
@@ -254,9 +264,15 @@ setInterval(function(){
 },4000)
 
 function checkCollision(){
-    if (obstacleOnScreen&&(canv2.getBoundingClientRect().height<=obstacle1.getBoundingClientRect().top)&&(car.getBoundingClientRect().x-20<=obstacle1.getBoundingClientRect().x&&obstacle1.getBoundingClientRect().x<=car.getBoundingClientRect().x+20)){
-        alert ("yoo")
+    if (obstacleOnScreen&&(canv2.getBoundingClientRect().height<=obstacle1.getBoundingClientRect().top)&&(car.getBoundingClientRect().x-20<=obstacle1.getBoundingClientRect().x&&obstacle1.getBoundingClientRect().x<=car.getBoundingClientRect().x+20)&&(checkedAlready==false)){
+        gameRunning=false;
+        alert("Sorry you lost the game")
+        score=0
+        document.getElementById("score").textContent="Score: "+score;
+        speedOfEverything=2
+        checkedAlready=true;
     }
     
 
 }
+
